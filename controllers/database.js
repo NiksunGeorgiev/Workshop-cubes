@@ -7,7 +7,7 @@ const dataBaseFile=path.join(__dirname,'..','config/database.json')
 
 
 
-const saveCube = (cube) => {
+const saveCube = (cube,callback) => {
     getCubes((cubes) => {
      
      cubes.push(cube)
@@ -17,6 +17,7 @@ const saveCube = (cube) => {
              throw error
          }
          console.log("Cube is successfully stored")
+         callback()
      })
 
    })
