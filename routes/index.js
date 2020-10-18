@@ -10,8 +10,8 @@ module.exports = (app) => {
         res.render('index',{
             title: 'Cube Workshop',
             cubes
-      
         })
+      
       })
     })
 
@@ -40,6 +40,9 @@ module.exports = (app) => {
        cube.save(()=>{
            res.redirect('/')
        })
+    })
+    app.get('/create/accessory',(req,res)=>{
+        res.render('createAccessory',{title: 'Create Accessory | Cube Workshop'})
     })
 
 
