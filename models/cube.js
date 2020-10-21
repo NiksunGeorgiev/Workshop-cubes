@@ -13,7 +13,6 @@ const mongoose = require('mongoose');
    imageUrl:
    {type: String,
     required: true,
-    
    },
    difficulty:
    {type: Number,
@@ -27,12 +26,8 @@ const mongoose = require('mongoose');
    }]
   })
 
-  /*CubeSchema.methods.toJSON = function() {
-    var obj = this.toObject();
-    delete obj.password;
-    return obj;
-   }
-    
- */
+ CubeSchema.path('imageUrl').validate(function(url){
+   return url.startsWith('http://') || url.startsWith('https://')
+ }, 'Url is not valid')
 
   module.exports=mongoose.model('Cube',CubeSchema)
