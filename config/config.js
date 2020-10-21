@@ -1,4 +1,4 @@
-const database = require("../controllers/database");
+
 
 module.exports = {
     development: {
