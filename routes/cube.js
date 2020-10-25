@@ -1,13 +1,10 @@
-
- const {Router}=require('express')
-
- const router=Router()
-
-
-
- const {getCubeWithAccessories }= require('../controllers/cubes')
-
- const Cube = require('../models/cube')
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config')[env];
+const {Router}=require('express')
+const router=Router()
+const jwt=require('jsonwebtoken')
+const {getCubeWithAccessories }= require('../controllers/cubes')
+const Cube = require('../models/cube')
 
 router.get('/create',(req,res)=>{
  res.render('create',{title: 'Create Cube | Cube Workshop'})
@@ -16,29 +13,28 @@ router.get('/create',(req,res)=>{
 router.post('/create',(req,res)=>{
     
   const {
-
     name,
     description,
     imageUrl,
     difficultyLevel
-
    }=req.body
+    
 
-   const cube=new Cube({name,description,imageUrl,difficulty:difficultyLevel})
-   cube.save((err)=>{
-       if(err){
+    const token=req.cookies['aid']
+    const decodedObject=jwt.verify(token,config.private_key)
+    console.log("Decoded  ",decodedObject)
+   
+
+    const cube=new Cube({name,description,imageUrl,difficulty:difficultyLevel,creatorId:decodedObject.userID})
+    cube.save((err)=>{
+        if(err){
            console.error(err)
            res.redirect('/create')
-       } else {
+        } else {
         res.redirect('/')
-       }
-       
-   })
+        }
+    })
 })
-
-
-
-
 
 
 router.get('/details/:id',async(req,res)=>{

@@ -1,10 +1,7 @@
 const {Router}=require('express')
-
 const router=Router()
-
 const {getAllAccessories} = require('../controllers/accessories')
 const {updateCube,getCube}=require('../controllers/cubes')
-
 const Accessory = require('../models/accessory')
 
 

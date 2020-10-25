@@ -24,7 +24,7 @@ const mongoose = require('mongoose');
    [{type: 'ObjectId',
     ref:'Accessory'
    }],
-   users:{
+   creatorId:{
      type: 'ObjectId',
      ref: 'User'
    }
