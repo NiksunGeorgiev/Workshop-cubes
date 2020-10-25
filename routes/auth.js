@@ -3,7 +3,7 @@ const {Router}=require('express')
 const router=Router()
 const bcrypt=require('bcrypt')
 
-const {saveUser}=require('../controllers/user')
+const {saveUser,verifyUser}=require('../controllers/user')
 
 
 const User = require('../models/user')
@@ -18,7 +18,17 @@ router.get('/login',(req,res)=>{
     })
 
 })
+router.post('/login',async (req,res)=>{
 
+    const status=await verifyUser(req,res)
+  
+    if(status){
+    return  res.redirect('/')
+    } else {
+        res.redirect('/login')
+    }
+  })
+  
 router.get('/signup',(req,res)=>{
 
     res.render('registerPage',{

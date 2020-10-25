@@ -4,7 +4,8 @@ const config = require('../config/config')[env];
 
 const User=require('../models/user')
 const bcrypt=require('bcrypt')
-const jwt=require('jsonwebtoken')
+const jwt=require('jsonwebtoken');
+const { findOne } = require('../models/user');
 
 
 const generateToken = data =>{
@@ -42,8 +43,32 @@ const saveUser=async(req,res)=>{
     return true
 }
 
+const verifyUser = async(req,res) =>{
+    const{
+        username,
+        password
+   }= req.body
+
+    const user = await User.findOne({username})
+   
+    const status =await bcrypt.compare(password,user.password)
+    
+    if(status){
+        const token=await generateToken({
+            userID:user._id,
+            username:user.username
+        })
+
+        res.cookie('aid',token)
+    }
+
+    return status
+
+}
+
 
 module.exports={
     saveUser,
-    generateToken
+    generateToken,
+    verifyUser
 }
