@@ -74,6 +74,20 @@ router.get('/edit',checkAuthentication,getUserStatus,(req,res)=>{
     })
 })
 
+router.post('/edit',checkAuthentication,async(req,res)=>{
+    const{
+        name,
+        description,
+        imageUrl,
+        difficultyLevel
+    } = req.body
+
+  await Cube.update({name,description,imageUrl,difficulty:difficultyLevel})
+
+  res.redirect('/')
+    
+})
+
 
 
 module.exports=router
