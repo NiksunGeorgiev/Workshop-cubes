@@ -5,8 +5,8 @@ const getAllAccessories = async  () => {
  
     return accessories
   
- }
+}
 
- module.exports={
+module.exports={
      getAllAccessories
- }
+}

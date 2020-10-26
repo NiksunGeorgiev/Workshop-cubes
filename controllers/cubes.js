@@ -1,8 +1,4 @@
-
 const Cube=require('../models/cube')
-
-
-
 
 const getAllCubes = async  () => {
    const cubes=await Cube.find().lean()
@@ -24,19 +20,26 @@ const getCubeWithAccessories= async (id)=>{
    }
 
 
-const updateCube = async (cubeId , accessoryId)=>{
+ const updateCube = async (cubeId , accessoryId)=>{
    await Cube.findByIdAndUpdate(cubeId,{
       $addToSet: {
      accessories:[accessoryId] 
       }
-})
+   })
 }
 
 
+
+const  deleteCube=async(id)=>{
+   const cube= await Cube.deleteOne({ _id: id })
+   console.log(cube)
+    
+}
 
 module.exports= {
    getAllCubes,
    getCube,
    updateCube,
-   getCubeWithAccessories
+   getCubeWithAccessories,
+   deleteCube
 }

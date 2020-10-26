@@ -2,14 +2,18 @@ const {Router}=require('express')
 const router=Router()
 const {getAllAccessories} = require('../controllers/accessories')
 const {updateCube,getCube}=require('../controllers/cubes')
+const {checkAuthentication,getUserStatus,checkAuthenticationJSON} = require('../controllers/user')
 const Accessory = require('../models/accessory')
 
 
-router.get('/create/accessory',(req,res)=>{
-    res.render('createAccessory',{title: 'Create Accessory | Cube Workshop'})
+router.get('/create/accessory',checkAuthentication,getUserStatus,(req,res)=>{
+    res.render('createAccessory',{
+        title: 'Create Accessory | Cube Workshop',
+        isLogedIn: req.isLogedIn
+    })
 })
 
-router.post('/create/accessory',async(req,res)=>{
+router.post('/create/accessory',checkAuthenticationJSON,async(req,res)=>{
    const{
        name,
        description,
@@ -24,7 +28,7 @@ router.post('/create/accessory',async(req,res)=>{
     
 })
 
-router.get('/attach/accessory/:id',async(req,res)=>{
+router.get('/attach/accessory/:id',checkAuthentication,getUserStatus,async(req,res)=>{
      
     
     const cube = await getCube(req.params.id)
@@ -46,11 +50,12 @@ router.get('/attach/accessory/:id',async(req,res)=>{
     accessories: 
     notAttachedAccessories,
     isFullyAttached,
+    isLogedIn:req.isLogedIn
    
-})  
+  })  
 })
 
-router.post('/attach/accessory/:id',async(req,res)=>{
+router.post('/attach/accessory/:id',checkAuthenticationJSON,async(req,res)=>{
 
    const{
        accessory
@@ -59,6 +64,9 @@ router.post('/attach/accessory/:id',async(req,res)=>{
    await updateCube(req.params.id,accessory)
 
      res.redirect(`/details/${req.params.id}`)
- })  
+})  
 
- module.exports = router
+ 
+ 
+ 
+module.exports = router
