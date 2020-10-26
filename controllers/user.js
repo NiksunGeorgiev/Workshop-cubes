@@ -1,11 +1,9 @@
 const env = process.env.NODE_ENV || 'development';
-
 const config = require('../config/config')[env];
-
 const User=require('../models/user')
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken');
-const { findOne } = require('../models/user');
+
 
 
 const generateToken = data =>{
@@ -47,7 +45,7 @@ const verifyUser = async(req,res) =>{
     const{
         username,
         password
-   }= req.body
+    }= req.body
 
     const user = await User.findOne({username})
    
@@ -67,8 +65,58 @@ const verifyUser = async(req,res) =>{
 }
 
 
+const checkAuthentication = (req,res,next) =>{
+    
+    try{
+     const token =req.cookies['aid']
+     jwt.verify(token,config.private_key)
+     next()
+    }catch(e){ 
+     return res.redirect('/')  
+    }
+}
+
+const guestAcces = (req,res,next) =>{
+    const token =req.cookies['aid']
+  
+    if(token){
+      
+      return res.redirect('/')
+    }
+    next()
+
+}
+
+const getUserStatus=(req,res,next)=>{
+    try{
+       const token =req.cookies['aid']
+       jwt.verify(token,config.private_key)
+       req.isLogedIn=true
+    }catch(e){ 
+        req.isLogedIn=false
+    }
+
+    next()
+}
+
+
+const checkAuthenticationJSON = (req,res,next) =>{
+    
+    try{
+     const token =req.cookies['aid']
+     jwt.verify(token,config.private_key)
+     next()
+    }catch(e){ 
+     return res.json({eroor:"Not Authenticated"})
+    }
+}
+
+
 module.exports={
     saveUser,
-    generateToken,
-    verifyUser
+    verifyUser,
+    checkAuthentication,
+    guestAcces,
+    getUserStatus,
+    checkAuthenticationJSON
 }

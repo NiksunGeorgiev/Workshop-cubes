@@ -3,21 +3,18 @@ const {Router}=require('express')
 const router=Router()
 const bcrypt=require('bcrypt')
 
-const {saveUser,verifyUser}=require('../controllers/user')
-
-
+const {saveUser,verifyUser,guestAcces,getUserStatus}=require('../controllers/user')
 const User = require('../models/user')
 
-
-
-router.get('/login',(req,res)=>{
+router.get('/login',guestAcces,getUserStatus,(req,res)=>{
 
     res.render('loginPage',{
-        title: 'Cube Workshop | Login'
-       
+        title: 'Cube Workshop | Login',
+        isLogedIn:req.isLogedIn
     })
 
 })
+
 router.post('/login',async (req,res)=>{
 
     const status=await verifyUser(req,res)
@@ -28,12 +25,12 @@ router.post('/login',async (req,res)=>{
         res.redirect('/login')
     }
   })
-  
-router.get('/signup',(req,res)=>{
+
+router.get('/signup',guestAcces,getUserStatus,(req,res)=>{
 
     res.render('registerPage',{
-        title: 'Cube Workshop | Register'
-       
+        title: 'Cube Workshop | Register',
+        isLogedIn: req.isLogedIn
     })
 
 })
