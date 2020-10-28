@@ -30,16 +30,11 @@ const getCubeWithAccessories= async (id)=>{
 
 
 
-const  deleteCube=async(id)=>{
-   const cube= await Cube.deleteOne({ _id: id })
-   console.log(cube)
-    
-}
 
 module.exports= {
    getAllCubes,
    getCube,
    updateCube,
    getCubeWithAccessories,
-   deleteCube
+ 
 }

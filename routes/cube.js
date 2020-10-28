@@ -4,9 +4,9 @@ const {Router}=require('express')
 const router=Router()
 const {checkAuthentication,getUserStatus,checkAuthenticationJSON} = require('../controllers/user')
 const jwt=require('jsonwebtoken')
-const {getCubeWithAccessories,deleteCube,getCube }= require('../controllers/cubes')
+const {getCubeWithAccessories}= require('../controllers/cubes')
 const Cube = require('../models/cube');
-const cube = require('../models/cube');
+
 
 router.get('/create',checkAuthentication,getUserStatus,(req,res)=>{
  res.render('create',{
@@ -57,7 +57,7 @@ router.get('/details/:id',getUserStatus,async(req,res)=>{
  
 })
 
-router.get('/delete/',checkAuthentication,getUserStatus,async(req,res)=>{
+router.get('/delete',checkAuthentication,getUserStatus,async(req,res)=>{
     
     res.render('deleteCubePage',{
         title: 'Delete Cube | Cube Workshop', 
@@ -76,7 +76,7 @@ router.get('/edit',checkAuthentication,getUserStatus,(req,res)=>{
 
 router.post('/edit',checkAuthentication,async(req,res)=>{
     const{
-        name,
+        name, 
         description,
         imageUrl,
         difficultyLevel
