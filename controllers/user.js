@@ -19,10 +19,9 @@ const saveUser=async(req,res)=>{
    }= req.body
    
     const salt = await bcrypt.genSalt(10)
-   
     const hashedPassword=await bcrypt.hash(password,salt)
 
-
+ try{
     const user= new User({
         username,
         password:hashedPassword
@@ -38,7 +37,13 @@ const saveUser=async(req,res)=>{
 
     res.cookie('aid',token)
     
-    return true
+  return token
+ }catch(error){
+    return {
+        error: true,
+        message: error
+    }
+ }
 }
 
 const verifyUser = async(req,res) =>{
@@ -46,8 +51,15 @@ const verifyUser = async(req,res) =>{
         username,
         password
     }= req.body
-
+    
+    try{
     const user = await User.findOne({username})
+    if(!user){
+        return{
+            message:'There is no such user',
+            error:true
+        }
+    }
    
     const status =await bcrypt.compare(password,user.password)
     
@@ -60,8 +72,17 @@ const verifyUser = async(req,res) =>{
         res.cookie('aid',token)
     }
 
-    return status
-
+    return {
+        error:!status,
+        message: status || 'Wrong Password'
+    }
+  }catch(err){
+    return{
+        error:true,
+        message:'There is no such user',
+        status
+    }
+  }
 }
 
 
